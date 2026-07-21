@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import type { Server } from 'node:http';
 import dotenv from 'dotenv';
 import { UserModel } from './models/user';
@@ -7,13 +6,13 @@ import { TeamModel } from './models/team';
 import { ActivityModel } from './models/activity';
 import { LeaderboardModel } from './models/leaderboard';
 import { WorkoutModel } from './models/workout';
+import { connectDatabase } from './config/database';
 
 dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 8000);
 const codespaceName = process.env.CODESPACE_NAME;
-const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 const apiBaseUrl = codespaceName
   ? `https://${codespaceName}-8000.app.github.dev`
   : `http://localhost:${port}`;
@@ -51,7 +50,7 @@ app.get('/api/workouts/', async (_req, res) => {
 
 export async function startServer(): Promise<Server> {
   try {
-    await mongoose.connect(mongoUri);
+    await connectDatabase();
   } catch (error) {
     console.warn('MongoDB connection unavailable, continuing without database:', error);
   }

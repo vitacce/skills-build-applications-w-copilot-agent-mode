@@ -5,13 +5,13 @@ import { TeamModel } from '../models/team';
 import { ActivityModel } from '../models/activity';
 import { LeaderboardModel } from '../models/leaderboard';
 import { WorkoutModel } from '../models/workout';
+import { connectDatabase } from '../config/database';
 
 dotenv.config();
 
 // Seed the octofit_db database with test data
 async function seed() {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/octofit_db';
-  await mongoose.connect(uri);
+  await connectDatabase();
 
   await Promise.all([
     UserModel.deleteMany({}),
